@@ -53,6 +53,7 @@ public:
 
     bool unload()
     {
+        m_map.clear();
         if (m_lib == nullptr)
         {
             return true;
