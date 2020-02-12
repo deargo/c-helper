@@ -36,7 +36,7 @@ Thumbs.db
 /.qmake.stash
 
 # qtcreator generated files
-*.pro.user*
+*.pro.user.*
 
 # xemacs temporary files
 *.flc
@@ -54,8 +54,6 @@ Thumbs.db
 *.sdf
 *.opensdf
 .vs
-Debug
-Release
 
 # MinGW generated files
 *.Debug
@@ -70,4 +68,7 @@ Release
 *.dll
 *.exe
 
+build
+Debug
+Release
 

@@ -7,11 +7,13 @@ export sh_arg2=$2
 export sh_arg3=$3
 export sh_arg4=$4
 
-export sh_dir=$(pwd)
+export dir_curr=$(pwd)
 export arg_null="null"
 export arg_blank="　" 
 export arg_help="help"
 export arg_build="build"
+export arg_build_gcc="gcc"
+export arg_build_make="make"
 export arg_clear="clear"
 export arg_start="start"
 
@@ -30,19 +32,32 @@ func_usage()
 
 func_clear()
 {
-    rm -fr $proj_bin
+    rm -fr $dir_curr/build
     echo ""
 }
 
 func_build()
 {
-    g++ -std=c++11 main.cpp  -L./ -ldl -o $proj_bin
+    mkdir -p build
+    
+    cd mydll
+    sh mydll.sh
+    
+    cd $dir_curr;
+    if [ ! -f build/libmydll.so ];then
+        echo "failed to build mydll";
+        exit;
+    fi
+    
+    g++ -std=c++11 test/main.cpp  -I./mydll -I./cpphelper -I./test -L./build -ldl -lmydll -o build/$proj_bin
 
+    ls -lh build/
     echo ""
 }
 
 func_start()
 {
+    cd build
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./
 	./$proj_bin
 }
@@ -51,7 +66,7 @@ func_start()
 case ${sh_arg1:=$arg_null} in
     $arg_null ) func_start; ;;
     $arg_help ) func_usage $LINENO "show usage and exit"; ;;
-    $arg_build  ) shift; func_build $*; ;;
+    $arg_build  ) shift; func_build $1; ;;
     $arg_clear  ) func_clear; ;;
     $arg_start  ) func_start; ;;
     *) func_usage $LINENO "unsupport action"; exit; ;;

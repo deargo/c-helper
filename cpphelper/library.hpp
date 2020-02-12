@@ -17,7 +17,7 @@
 
 using namespace std;
 
-namespace Helper
+namespace CppHelper
 {
 
 //原文链接：https://blog.csdn.net/aguoxin/article/details/104265711
@@ -132,96 +132,4 @@ private:
     Object m_lib;
     std::unordered_map<string, Symbol> m_map;
 };
-
-/*
-//myDll.h
-#pragma once
-
-#ifdef _WIN32
-#   ifdef EXPORT_API
-#       define EXPORT_API __declspec(dllexport)
-#   else
-#       define EXPORT_API __declspec(dllimport)
-#   endif
-#else
-#   define EXPORT_API
-#endif //WIN32
-
-extern "C" int EXPORT_API Add(int x, int y);
-extern "C" int EXPORT_API Max(int x, int y);
-
-//myDll.cpp
-
-#include  "myDll.h"
-
-int Add(int x, int y)
-{
-    return x + y;
-}
-
-int Max(int x, int y)
-{
-    return x > y ? x : y;
-}
-
-动态库vs2019编译：
-　　项目->属性->常规->配置类型：动态库(.dll)
-
-动态库linux编译：
-　　脚本文件：sh myDll.sh。记得添加-fPIC和-shared参数。
-#!/bin/bash
-rm -fr  libmydll.so
-
-g++ -std=c++11 -fPIC -shared -o libmydll.so myDll.cpp
-
-if [ -f "libmydll.so" ]; then
-        cp libmydll.so ../Test/
-fi
-
-
-动态库测试代码
-　　记得动态库路径为绝对路径，或者当前路径。
-
-#include <string>
-#include <iostream>
-#include "library.hpp"
-
-using namespace std;
-
-int main(int argc, char *argv[])
-{
-    cout << "enter main..." << endl;
-
-#ifdef _WIN32
-    Helper::CLibrary lib("mydll.dll");
-#else
-    Helper::CLibrary lib("libmydll.so");
-#endif
-    cout << "dll add exsit: " << lib.exist("add")<< endl;
-
-    auto fmax = lib.getFunction<int(int, int)>("Max");
-    cout << "dll fMax: "<<fmax(1,5)<<endl;
-
-    cout << "dll fAdd: "<<lib.execute<int(int, int)>("Add", 5, 8)<< endl;
-
-
-    cout << "exit main." << endl;
-    return 0;
-}
-
-
-测试运行：
-　　加载动态库需-ldl和LD_LIBRARY_PATH.
-
-#!/bin/bash
-rm -fr test.out
-
-g++ -std=c++11 main.cpp  -L./ -lmydll -ldl -o test.out
-
-if [ -f "test.out" ]; then
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./
-        ./test.out
-fi
-
-*/
 }
