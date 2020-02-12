@@ -22,8 +22,10 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../mydll/debug/ -lm
 else:unix: LIBS += -L$$OUT_PWD/../mydll/ -lmydll
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+        test.cpp
 
 HEADERS += \
+    ../cpphelper/command.hpp \
     ../cpphelper/library.hpp \
-    library_test.h
+    test.h

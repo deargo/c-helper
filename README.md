@@ -17,4 +17,5 @@ CSDN博客：[https://blog.csdn.net/aguoxin/category_9713658.html](https://blog.
 # 代码列表
 |文件名           |                                                                    |简要概述|
 |-----------------|--------------------------------------------------------------------|--------|
-|library.hpp      |[博客地址](https://blog.csdn.net/aguoxin/article/details/104265711) |动态库相关|  
+|library.hpp      |[博客地址](https://blog.csdn.net/aguoxin/article/details/104265711) |动态库显式调用封装|  
+|command.hpp      |[博客地址](https://blog.csdn.net/aguoxin/article/details/104279964) |用C++11改进命令模式|  

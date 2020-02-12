@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <set>
 
-#include "library_test.h"
+#include "test.h"
 
 using namespace std;
 
@@ -27,9 +27,9 @@ int main(int argc, char *argv[])
 #endif
     cout << "enter main..." << endl;
     //////////////////////////////////////////
-    /// \brief CppHelper::Test::CLibraryTest
-    ///
-    CppHelper::Test::CLibraryTest();
+
+    CppHelperTest::CLibraryTest();
+    CppHelperTest::CCommandTest();
     
     
     //////////////////////////////////////////

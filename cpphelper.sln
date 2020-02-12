@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpphelper", "cpphelper.vcxproj", "{A5BA0C99-299C-4FAB-89E2-27C5B26F4844}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BB49EA02-84E3-4B28-840D-9F2F6EE04DCD} = {BB49EA02-84E3-4B28-840D-9F2F6EE04DCD}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mydll", "mydll\mydll.vcxproj", "{BB49EA02-84E3-4B28-840D-9F2F6EE04DCD}"
 EndProject
