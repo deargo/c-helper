@@ -1,6 +1,8 @@
 #include "test.h"
+#include <thread>
 #include "library.hpp"
 #include "command.hpp"
+#include "threadpool.hpp"
 
 using namespace std;
 
@@ -10,14 +12,15 @@ using namespace std;
 #       define __FUNC__ __func__
 #   endif
 
-#define TEST_FUNC_PRINT cout << endl << "=============================" << __FUNC__ << endl
+#define TEST_FUNC_BEGIN cout << endl << "=============================begin " << __FUNC__ << endl
+#define TEST_FUNC_ENDED cout << endl << "=============================ended " << __FUNC__ << endl <<endl
 
 namespace CppHelperTest
 {
 
 void CLibraryTest()
 {
-    TEST_FUNC_PRINT;
+    TEST_FUNC_BEGIN;
     //记得动态库路径为绝对路径，或者当前路径。linux动态库需-ldl和LD_LIBRARY_PATH.
 #ifdef _WIN32
     CppHelper::CLibrary lib("mydll.dll");
@@ -30,6 +33,8 @@ void CLibraryTest()
     cout << "dll fMax: " << fmax(1, 5) << endl;
 
     cout << "dll fAdd: " << lib.execute<int(int, int)>("Add", 5, 8) << endl;
+
+    TEST_FUNC_ENDED;
 }
 
 
@@ -51,7 +56,7 @@ int add_one(int n)
 }
 void CCommandTest()
 {
-    TEST_FUNC_PRINT;
+    TEST_FUNC_BEGIN;
 
     CppHelper::CCommand<int> cmd;
     //普通函数
@@ -86,5 +91,48 @@ void CCommandTest()
     CppHelper::CCommand<> cmd2;
     cmd2.Wrap(&STA::triple3, &t);
     cmd2.Excecute();
+
+    TEST_FUNC_ENDED;
+}
+
+
+void CThreadPoolTest()
+{
+    TEST_FUNC_BEGIN;
+    CppHelper::CThreadPool pool(2);
+
+    std::thread thd1([&pool]
+    {
+        auto thdid = this_thread::get_id();
+        for (int i = 0; i < 10; i++)
+        {
+            pool.addTask([](std::thread::id thdid, int value)
+            {
+                cout << "synchronous thread1[" << thdid << "] value[" << value << "], handle thread: " << this_thread::get_id() << endl;
+            },thdid,i+100);
+        }
+    });
+    std::thread thd2([&pool]
+    {
+        auto thdid = this_thread::get_id();
+        for (int i = 0; i < 10; i++)
+        {
+            pool.addTask([&](std::thread::id thdid, int value)
+            {
+                cout << "synchronous thread2[" << thdid << "] value[" << value << "], handle thread: " << this_thread::get_id() << endl;
+            },thdid,i+200);
+        }
+    });
+
+    cout << "sleep seconds(2) ..." << endl << endl;
+    this_thread::sleep_for(std::chrono::seconds(2));
+
+    cout << endl << "input any words to stop: ";
+    getchar();
+    pool.stop();
+    thd1.join();
+    thd2.join();
+
+    TEST_FUNC_ENDED;
 }
 }

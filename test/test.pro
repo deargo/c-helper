@@ -28,4 +28,5 @@ SOURCES += \
 HEADERS += \
     ../cpphelper/command.hpp \
     ../cpphelper/library.hpp \
+    ../cpphelper/threadpool.hpp \
     test.h

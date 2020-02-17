@@ -13,22 +13,25 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{5e44fea2-e244-4c9b-852f-e0be1b71b59c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="test">
       <UniqueIdentifier>{8fd43451-55c0-4e8c-a415-6bb51cd4ac22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cpphelper">
+      <UniqueIdentifier>{5e44fea2-e244-4c9b-852f-e0be1b71b59c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cpphelper\library.hpp">
-      <Filter>src</Filter>
+      <Filter>cpphelper</Filter>
     </ClInclude>
     <ClInclude Include="test\test.h">
       <Filter>test</Filter>
     </ClInclude>
     <ClInclude Include="cpphelper\command.hpp">
-      <Filter>src</Filter>
+      <Filter>cpphelper</Filter>
+    </ClInclude>
+    <ClInclude Include="cpphelper\threadpool.hpp">
+      <Filter>cpphelper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

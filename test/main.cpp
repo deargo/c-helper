@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 
     CppHelperTest::CLibraryTest();
     CppHelperTest::CCommandTest();
+    CppHelperTest::CThreadPoolTest();
     
     
     //////////////////////////////////////////

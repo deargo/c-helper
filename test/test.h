@@ -24,5 +24,6 @@ namespace CppHelperTest
 {
 void CLibraryTest();
 void CCommandTest();
+void CThreadPoolTest();
 }
 

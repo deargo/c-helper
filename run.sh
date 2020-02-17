@@ -49,7 +49,7 @@ func_build()
         exit;
     fi
     
-    g++ -std=c++11 test/main.cpp test/test.cpp -I./mydll -I./cpphelper -I./test -L./build -ldl -lmydll -o build/$proj_bin
+    g++ -std=c++11 test/main.cpp test/test.cpp -I./mydll -I./cpphelper -I./test -L./build -lpthread -ldl -lmydll -o build/$proj_bin
 
     ls -lh build/
     echo ""

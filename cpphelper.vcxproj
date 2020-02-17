@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="cpphelper\command.hpp" />
     <ClInclude Include="cpphelper\library.hpp" />
+    <ClInclude Include="cpphelper\threadpool.hpp" />
     <ClInclude Include="test\test.h" />
   </ItemGroup>
   <ItemGroup>
