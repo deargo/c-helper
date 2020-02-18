@@ -29,4 +29,5 @@ HEADERS += \
     ../cpphelper/command.hpp \
     ../cpphelper/library.hpp \
     ../cpphelper/threadpool.hpp \
+    ../cpphelper/vector.hpp \
     test.h

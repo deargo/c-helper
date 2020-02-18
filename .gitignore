@@ -54,6 +54,7 @@ Thumbs.db
 *.sdf
 *.opensdf
 .vs
+msvc_make.bat
 
 # MinGW generated files
 *.Debug

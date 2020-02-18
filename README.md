@@ -20,3 +20,4 @@ CSDN博客：[https://blog.csdn.net/aguoxin/category_9713658.html](https://blog.
 |library.hpp      |[博客地址](https://blog.csdn.net/aguoxin/article/details/104265711) |动态库显式调用封装|  
 |command.hpp      |[博客地址](https://blog.csdn.net/aguoxin/article/details/104279964) |用C++11改进命令模式| 
 |threadpool.hpp   |[博客地址](https://blog.csdn.net/aguoxin/article/details/104353352) |用C++11实现半同步半异步线程池|  
+|vector.hpp       |[博客地址](https://blog.csdn.net/aguoxin/article/details/104377293) |在原std::vector基础上改进接口|  

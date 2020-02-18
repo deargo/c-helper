@@ -3,6 +3,7 @@
 #include "library.hpp"
 #include "command.hpp"
 #include "threadpool.hpp"
+#include "vector.hpp"
 
 using namespace std;
 
@@ -135,4 +136,44 @@ void CThreadPoolTest()
 
     TEST_FUNC_ENDED;
 }
+
+void CVectorTest()
+{
+    TEST_FUNC_BEGIN;
+
+    typedef std::set<int> StdSet;
+    typedef std::list<int> StdList;
+    typedef std::vector<int> StdVec;
+    typedef CppHelper::CVector<int> NewVec;
+
+
+    StdSet stdSet{11,12,13,14,15,16,17,18,19};
+    StdList stdList{21,22,23,24,25,26,27,28,29};
+    StdVec stdVec1{31,32,33,34,35,36,37,38,39};
+    StdVec stdVec2{41,42,43,44,45,46,47,48,49};
+
+    NewVec newVec1;
+    NewVec newVec2(20);
+    NewVec newVec3(stdSet);
+    NewVec newVec4(stdList);
+    NewVec newVec5(stdVec1);
+    newVec1.append(555);
+    newVec1.append(stdSet);
+    newVec1.insert(8,18);
+    bool b = newVec1.contains(555);
+    auto idx = newVec1.indexof(13);
+    auto val = newVec1.value(idx);
+    newVec1.remove(18);
+    newVec5.clear();
+    newVec5 += newVec4;
+    newVec5 << val;
+
+    stdSet = newVec1.toSet();
+
+    stdVec2 = newVec3;
+
+
+    TEST_FUNC_ENDED;
+}
+
 }
