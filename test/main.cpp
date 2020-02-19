@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
     //CppHelperTest::CThreadPoolTest();
     CppHelperTest::CVectorTest();
 
-
     cout << "exit main." << endl;
 #ifdef __USE_QT__
     return a.exec();

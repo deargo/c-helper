@@ -147,6 +147,14 @@ void CVectorTest()
     typedef CppHelper::CVector<int> NewVec;
 
 
+#define TEST_vec_bool(b) (b ? "true" : "false")
+#define TEST_vec_exec(flage,code) cout << flage << code << endl
+#define TEST_vec_print(flage,val) cout << flage ;\
+    for(auto it = val.begin();it!=val.end();++it) cout << *it << " ";\
+    if(val.empty()) cout << "empty";\
+    cout << endl
+
+    int arr[] = {1,2,3,4,5,6,7,8,9};
     StdSet stdSet{11,12,13,14,15,16,17,18,19};
     StdList stdList{21,22,23,24,25,26,27,28,29};
     StdVec stdVec1{31,32,33,34,35,36,37,38,39};
@@ -157,21 +165,125 @@ void CVectorTest()
     NewVec newVec3(stdSet);
     NewVec newVec4(stdList);
     NewVec newVec5(stdVec1);
+    NewVec newVec6(arr,arr+9);
+
+    TEST_vec_print(" stdSet: ",stdSet);
+    TEST_vec_print("stdList: ",stdList);
+    TEST_vec_print("stdVec1: ",stdVec1);
+    TEST_vec_print("stdVec2: ",stdVec2);
+    TEST_vec_print("newVec1: ",newVec1);
+    TEST_vec_print("newVec2: ",newVec2);
+    TEST_vec_print("newVec3: ",newVec3);
+    TEST_vec_print("newVec4: ",newVec4);
+    TEST_vec_print("newVec5: ",newVec5);
+    TEST_vec_print("newVec6: ",newVec6);
+
+    newVec1 = newVec3;
+    newVec1 += newVec4;
+    newVec1 << 100 << 200<< 300;
+    TEST_vec_print("newVec1: ",newVec1);
+
+    TEST_vec_exec ("newVec1.size()    : ",newVec1.size());
+    TEST_vec_exec ("newVec1.capacity(): ",newVec1.capacity());
+    newVec1.clear();
+    TEST_vec_exec ("newVec1.size()    : ",newVec1.size());
+    TEST_vec_exec ("newVec1.capacity(): ",newVec1.capacity());
+    TEST_vec_print("newVec1: ",newVec1);
+
     newVec1.append(555);
+    newVec1.append(newVec3);
     newVec1.append(stdSet);
-    newVec1.insert(8,18);
-    bool b = newVec1.contains(555);
-    auto idx = newVec1.indexof(13);
-    auto val = newVec1.value(idx);
-    newVec1.remove(18);
-    newVec5.clear();
-    newVec5 += newVec4;
-    newVec5 << val;
+    newVec1.append(stdList);
+    TEST_vec_print("newVec1: ",newVec1);
 
-    stdSet = newVec1.toSet();
+    newVec1.contains(200,[](const int& v1,int v2){ return v1>v2;});
+    TEST_vec_exec ("newVec1.contains(555) : ",TEST_vec_bool(newVec1.contains(555)));
+    TEST_vec_exec ("newVec1.contains(>200): ",TEST_vec_bool(newVec1.contains(200,[](const int& v1,int v2){ return v1>v2;})));
+    TEST_vec_exec ("newVec1.count(11) : ",newVec1.count(11));
+    TEST_vec_exec ("newVec1.count(>28): ",newVec1.count(28,[](int v1, int v2){ return v1>v2;}));
 
-    stdVec2 = newVec3;
 
+    TEST_vec_print("newVec3                     : ",newVec3);
+    TEST_vec_print("stdSet                      : ",stdSet);
+    TEST_vec_exec ("newVec3.equal(stdSet.begin) : ",TEST_vec_bool(newVec3.equal(stdSet.begin())));
+    newVec2 = newVec3;
+    TEST_vec_print("newVec2                : ",newVec2);
+    TEST_vec_exec ("newVec2.equal(newVec3) : ",TEST_vec_bool(newVec2.equal(newVec3)));
+
+    TEST_vec_exec("newVec2.find(13)  : ",*(newVec1.find(13)));
+    TEST_vec_exec("newVec2.find(<=13): ",*(newVec1.find(13,[](int vecVal,int findVal){ return vecVal<=findVal;})));
+
+    cout << "newVec1.for_each: ";
+    newVec1.for_each([](int v){ cout << v << " "; });
+    cout << endl;
+
+    TEST_vec_exec("newVec1.index(15)            : ",newVec1.index(15));
+    TEST_vec_exec("newVec1.index(<100 && >=15)  : ",newVec1.index(15,[](int vecVal,int findVal){ return vecVal<100&& vecVal>=findVal;}));
+
+    TEST_vec_print("newVec1        : ",newVec1);
+    newVec1.insert(newVec1.size(),666);
+    TEST_vec_exec("newVec1.last() : ",newVec1.last());
+
+    newVec1.prepend(333);
+    TEST_vec_exec("newVec1.first(): ",newVec1.first());
+    TEST_vec_print("newVec1        : ",newVec1);
+
+    newVec1.clear();
+    TEST_vec_print("newVec1  : ",newVec1);
+    TEST_vec_print("newVec4  : ",newVec3);
+    TEST_vec_print(" stdSet: ",stdSet);
+    TEST_vec_print("stdList: ",stdList);
+    newVec1.push_back(11);
+    newVec1.push_back(newVec3);
+    newVec1.push_back(stdSet);
+    newVec1.push_back(stdList);
+    newVec1.push_front(444);
+    TEST_vec_print("newVec1  : ",newVec1);
+
+    newVec1.remove(11);
+    newVec1.remove(15,[](int vecVal,int findVal){ return vecVal < findVal+2 && vecVal >= findVal-2;});
+    newVec1.removeRange(3,6);
+    TEST_vec_print("newVec1 remove1 : ",newVec1);
+    newVec1.removeFirst();
+    newVec1.removeLast();
+    newVec1.removeAt(3);
+    TEST_vec_print("newVec1 remove2    : ",newVec1);
+    TEST_vec_exec("newVec1.size()     : ",newVec1.size());
+    TEST_vec_exec("newVec1.capacity() : ",newVec1.capacity());
+    newVec1.removeAll();
+    TEST_vec_print("newVec1 removeAll  : ",newVec1);
+    TEST_vec_exec("newVec1.size()     : ",newVec1.size());
+    TEST_vec_exec("newVec1.capacity() : ",newVec1.capacity());
+
+    newVec1 = newVec3;
+    TEST_vec_print("newVec1=newVec3          : ",newVec1);
+    newVec1.replace(3,333);
+    TEST_vec_print("newVec1.replace(3,333)   : ",newVec1);
+    newVec1.sort();
+    TEST_vec_print("newVec1.sort()    : ",newVec1);
+    newVec1.sort([](int a,int b){return a>b;});
+    TEST_vec_print("newVec1.sort(a>b) : ",newVec1);
+
+    TEST_vec_print("newVec3               : ",newVec3);
+    newVec1.swap(newVec3);
+    TEST_vec_print("newVec1.swap(newVec3) : ",newVec1);
+    TEST_vec_print("newVec3               : ",newVec3);
+    newVec1.swap(3,7);
+    TEST_vec_print("newVec1.swap(3,7) : ",newVec1);
+
+    TEST_vec_exec("newVec1.takeAt(3)   : ",newVec1.takeAt(3));
+    TEST_vec_exec("newVec1.takeFirst() : ",newVec1.takeFirst());
+    TEST_vec_exec("newVec1.takeLast()  : ",newVec1.takeLast());
+    TEST_vec_exec("newVec1.value(7)    : ",newVec1.value(7));
+
+
+    TEST_vec_print("newVec5       : ",newVec5);
+    TEST_vec_print("stdSet        : ",stdSet);
+    TEST_vec_print("stdList       : ",stdList);
+    stdSet = newVec5.toStdSet();
+    stdList = newVec5.toStdList();
+    TEST_vec_print("stdSet        : ",stdSet);
+    TEST_vec_print("stdList       : ",stdList);
 
     TEST_FUNC_ENDED;
 }
