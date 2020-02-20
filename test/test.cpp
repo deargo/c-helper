@@ -161,7 +161,7 @@ void CVectorTest()
     StdVec stdVec2{41,42,43,44,45,46,47,48,49};
 
     NewVec newVec1;
-    NewVec newVec2(20);
+    NewVec newVec2(10);
     NewVec newVec3(stdSet);
     NewVec newVec4(stdList);
     NewVec newVec5(stdVec1);
@@ -177,6 +177,9 @@ void CVectorTest()
     TEST_vec_print("newVec4: ",newVec4);
     TEST_vec_print("newVec5: ",newVec5);
     TEST_vec_print("newVec6: ",newVec6);
+
+    TEST_vec_exec ("newVec3 == newVec3 ? : ",TEST_vec_bool(newVec3 == newVec4));
+    TEST_vec_exec ("newVec3 != newVec3 ? : ",TEST_vec_bool(newVec3 != newVec4));
 
     newVec1 = newVec3;
     newVec1 += newVec4;
@@ -196,12 +199,28 @@ void CVectorTest()
     newVec1.append(stdList);
     TEST_vec_print("newVec1: ",newVec1);
 
+    newVec1.clear();
+    newVec1.resize(20);
+    TEST_vec_print("newVec3      : ",newVec3);
+    TEST_vec_print("newVec1      : ",newVec1);
+    newVec1.copy(newVec1.begin(),newVec3.begin()+3,newVec3.end());
+    TEST_vec_print("newVec1.copy1: ",newVec1);
+    newVec1.copy(newVec1.begin(),newVec3.begin(),newVec3.end(),[](int v){ return v>15; });
+    TEST_vec_print("newVec1.copy2: ",newVec1);
+    newVec1.copy(newVec1.begin()+6,newVec3.begin(),3);
+    TEST_vec_print("newVec1.copy3: ",newVec1);
+
     newVec1.contains(200,[](const int& v1,int v2){ return v1>v2;});
     TEST_vec_exec ("newVec1.contains(555) : ",TEST_vec_bool(newVec1.contains(555)));
     TEST_vec_exec ("newVec1.contains(>200): ",TEST_vec_bool(newVec1.contains(200,[](const int& v1,int v2){ return v1>v2;})));
     TEST_vec_exec ("newVec1.count(11) : ",newVec1.count(11));
     TEST_vec_exec ("newVec1.count(>28): ",newVec1.count(28,[](int v1, int v2){ return v1>v2;}));
 
+    TEST_vec_print("newVec2                                         : ",newVec2);
+    newVec2.fill(newVec2.begin(),4,111);
+    TEST_vec_print("newVec2.fill(newVec2.begin(),4,111)             : ",newVec2);
+    newVec2.fill(newVec2.begin()+6,newVec2.end(),222);
+    TEST_vec_print("newVec2fill(newVec2.begin()+6,newVec2.end(),222): ",newVec2);
 
     TEST_vec_print("newVec3                     : ",newVec3);
     TEST_vec_print("stdSet                      : ",stdSet);

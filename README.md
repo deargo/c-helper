@@ -1,7 +1,9 @@
 # 项目说明 
 
-一般常用的C++函数、功能，按class分类封装，可windows及linux跨平台使用。  
-CSDN博客：[https://blog.csdn.net/aguoxin/category_9713658.html](https://blog.csdn.net/aguoxin/category_9713658.html)
+一般常用的C++函数、功能，按class分类封装，可windows及linux跨平台使用。   
+本项目的文件，尽量会以header-only的形式编写，即后缀名为.hpp。  
+各个类和函数之间，也尽量避免互相调用（所以可能有重复代码多处使用），以便使用时直接包含头文件即可。  
+CSDN专栏：[https://blog.csdn.net/aguoxin/category_9713658.html](https://blog.csdn.net/aguoxin/category_9713658.html)
 
 # 编译及运行
 

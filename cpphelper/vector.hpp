@@ -19,7 +19,7 @@ class CVector : public std::vector<Type,Alloc>{
 public:
     explicit CVector(const Alloc& alloc = Alloc()):StdVec(alloc) {}                                          //默认构造函数
     explicit CVector(size_t n, const Type& val = Type(), const Alloc& alloc = Alloc()):StdVec(n,val,alloc){} //容量构造函数
-    CVector(CVector&& ohter):StdVec(std::forward<CVector>(ohter)){ }                                                           //拷贝构造函数
+    CVector(CVector&& other):StdVec(std::forward<CVector>(other)){ }                                                           //拷贝构造函数
     CVector(const std::vector<Type,Alloc>& vec){ StdVec::assign(vec.begin(), vec.end()); }                   //可用std::vector初始化
     template <class InitIterator>                                                                            //可用迭代器初始化
     CVector (InitIterator first, InitIterator last, const Alloc& alloc = Alloc()):StdVec(first,last,alloc){}
@@ -28,17 +28,19 @@ public:
 
 public:
     operator std::vector<Type,Alloc>(){ return *this; }                                                  //类型转换函数，可直接转换为std::vector
-    CVector& operator =(const CVector& ohter){StdVec::assign(ohter.begin(), ohter.end()); return *this;} //赋值构造函数
-    CVector& operator +(const CVector& ohter){ push_back(ohter); return *this; }
-    CVector& operator +=(const CVector& ohter){ push_back(ohter); return *this; }
+    bool operator == (const CVector& other) const{ return std::equal(StdVec::begin(),StdVec::end(),other.begin()); }
+    bool operator !=(const CVector& other) const { return false == std::equal(StdVec::begin(),StdVec::end(),other.begin()); }
+    CVector& operator =(const CVector& other){StdVec::assign(other.begin(), other.end()); return *this;} //赋值构造函数
+    CVector& operator +(const CVector& other){ push_back(other); return *this; }
+    CVector& operator +=(const CVector& other){ push_back(other); return *this; }
     CVector& operator<<(Type&& value){ push_back(std::forward<Type>(value)); return *this; }
-    CVector& operator<<(const CVector& ohter){ push_back(ohter); return *this; }
+    CVector& operator<<(const CVector& other){ push_back(other); return *this; }
     CVector& operator<<(const std::set<Type>& set){ push_back(set); return *this; }
     CVector& operator<<(const std::list<Type>& list){ push_back(list); return *this; }
 
 public:
     void append(Type&& value){ push_back(std::forward<Type>(value)); }
-    void append(const CVector& ohter){ push_back(ohter); }
+    void append(const CVector& other){ push_back(other); }
     void append(const std::set<Type>& set){ push_back(set); }
     void append(const std::list<Type>& list){ push_back(list); }
 
@@ -52,6 +54,22 @@ public:
         return  std::find_if(StdVec::begin(), StdVec::end(),
                              std::bind(compareFunction,std::placeholders::_1,std::forward<Type>(value)))
                 != StdVec::end();
+    }
+
+    template <class CopyIterator>
+    typename CVector::iterator copy(typename CVector::iterator thisDesc, CopyIterator first,CopyIterator last)
+    {
+        return std::copy(first,last,thisDesc);
+    }
+    template <class CopyIterator, class Function>
+    typename CVector::iterator copy(typename CVector::iterator thisDesc, CopyIterator first,CopyIterator last, Function func)
+    {
+        return std::copy_if(first,last,thisDesc, func);
+    }
+    template <class CopyIterator>
+    typename CVector::iterator copy(typename CVector::iterator thisDesc, CopyIterator first,typename CVector::size_type n)
+    {
+        return std::copy_n(first,n,thisDesc);
     }
 
     int count(Type&& value) const
@@ -100,6 +118,9 @@ public:
         return  std::find_if(StdVec::begin(), StdVec::end(),
                              std::bind(compareFunction,std::placeholders::_1,std::forward<Type>(value)));
     }
+
+    void fill(typename CVector::iterator first, typename CVector::iterator last, Type&& value) { std::fill(first,last,std::forward<Type>(value)); }
+    void fill(typename CVector::iterator first, typename CVector::size_type n, Type&& value)  { std::fill_n(first,n,std::forward<Type>(value)); }
 
     Type first() const{ if (StdVec::empty()) return Type(); return *StdVec::begin(); }
 
