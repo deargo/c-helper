@@ -19,9 +19,8 @@ CSDN专栏：[https://blog.csdn.net/aguoxin/category_9713658.html](https://blog.
 # 文件列表
 | 目录及文件名                  | 概要说明 |  
 | ----------------------------- | -------- |
-| .                             | 根目录 |
 | ├── README.md                 | 项目说明文档 |
-| ├── cpphelper                 | C++常用类和函数封装目录 |
+| ├── cpphelper                 | C++常用类和函数封装目录：[博客专栏](https://blog.csdn.net/aguoxin/category_9713658.html)|
 | │   ├── command.hpp           | [用C++11改进命令模式](https://blog.csdn.net/aguoxin/article/details/104279964) |
 | │   ├── library.hpp           | [动态库显式调用封装](https://blog.csdn.net/aguoxin/article/details/104265711) |
 | │   ├── list.hpp              | [在原std::list基础上改进接口](https://blog.csdn.net/aguoxin/article/details/104416538) |
@@ -30,9 +29,6 @@ CSDN专栏：[https://blog.csdn.net/aguoxin/category_9713658.html](https://blog.
 | ├── cpphelper.pro             | Qt编译项目文件 |
 | ├── cpphelper.pro.user        | Qt编译配置文件 |
 | ├── cpphelper.sln             | VS编译解决方案 |
-| ├── cpphelper.vcxproj         | VS编译项目文件 |
-| ├── cpphelper.vcxproj.filters | VS编译项目文件过滤器 |
-| ├── cpphelper.vcxproj.user    | VS编译项目配置文件 |
 | ├── mydll                     | 测试动态库目录 |
 | │   ├── mydll.cpp             | 动态库实现文件 |
 | │   ├── mydll.h               | 动态库头文件 |
@@ -43,8 +39,11 @@ CSDN专栏：[https://blog.csdn.net/aguoxin/category_9713658.html](https://blog.
 | │   └── mydll.vcxproj.user    | 动态库VS项目配置文件 |
 | ├── run.sh                    | 项目Linux脚本 |
 | └── test                      | 项目测试目录 |
-|     ├── main.cpp              | 测试main文件 |
+|     ├── main.cpp              | 测试代码main文件 |
 |     ├── test.cpp              | 测试代码实现文件 |
 |     ├── test.h                | 测试代码头文件 |
-|     └── test.pro              | Qt测试项目文件 |  
+|     ├── test.pro              | Qt测试项目配置文件 |
+|     ├── test.vcxproj          | VS测试项目文件 |
+|     ├── test.vcxproj.filters  | VS测试项目文件过滤器 |
+|     └── test.vcxproj.user     | VS测试项目配置文件 |  
  
