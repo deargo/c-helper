@@ -28,10 +28,11 @@ public:
 
 public:
     operator std::vector<Type,Alloc>(){ return *this; }                                                  //类型转换函数，可直接转换为std::vector
-    bool operator == (const CVector& other) const{ return std::equal(StdVec::begin(),StdVec::end(),other.begin()); }
-    bool operator !=(const CVector& other) const { return false == std::equal(StdVec::begin(),StdVec::end(),other.begin()); }
+    bool operator == (const CVector& other) const{ return StdVec::size()==other.size() && std::equal(StdVec::begin(),StdVec::end(),other.begin()); }
+    bool operator !=(const CVector& other) const { return StdVec::size()!=other.size() || false == std::equal(StdVec::begin(),StdVec::end(),other.begin()); }
     CVector& operator =(const CVector& other){StdVec::assign(other.begin(), other.end()); return *this;} //赋值构造函数
     CVector& operator +(const CVector& other){ push_back(other); return *this; }
+    CVector& operator +=(Type&& value){ push_back(std::forward<Type>(value)); return *this; }
     CVector& operator +=(const CVector& other){ push_back(other); return *this; }
     CVector& operator<<(Type&& value){ push_back(std::forward<Type>(value)); return *this; }
     CVector& operator<<(const CVector& other){ push_back(other); return *this; }
@@ -48,7 +49,7 @@ public:
     {
         return  std::find(StdVec::begin(), StdVec::end(),std::forward<Type>(value)) != StdVec::end();
     }
-    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&&, Type&&) 的二元谓词函数
+    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
     bool contains(Type&& value,CompareFunction compareFunction) const
     {
         return  std::find_if(StdVec::begin(), StdVec::end(),
@@ -76,27 +77,27 @@ public:
     {
         return std::count(StdVec::begin(), StdVec::end(),std::forward<Type>(value));
     }
-    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&&, Type&&) 的二元谓词函数
+    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
     int count(Type&& value,CompareFunction compareFunction) const
     {
         return  std::count_if(StdVec::begin(), StdVec::end(),
                               std::bind(compareFunction,std::placeholders::_1,std::forward<Type>(value)));
     }
 
-    bool equal(const CVector& other) const
-    {
-        return std::equal(StdVec::begin(),StdVec::end(),other.begin());
-    }
+    bool equal(const CVector& other) const { return this->operator==(other); }
     template <class CompareIterator>
     bool equal(CompareIterator compareIterator) const
     {
         return std::equal(StdVec::begin(),StdVec::end(),compareIterator);
     }
-    template <class CompareIterator, class CompareFunction> //需要传入类似 bool (*compareFunction)(Type&&, Type&&) 的二元谓词函数
+    template <class CompareIterator, class CompareFunction> //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
     bool equal(CompareIterator compareIterator,CompareFunction compareFunction) const
     {
         return std::equal(StdVec::begin(),StdVec::end(),compareIterator,compareFunction);
     }
+
+    void fill(Type&& value,typename CVector::iterator first = StdVec::begin(), typename CVector::iterator last = StdVec::end()) { std::fill(first,last,std::forward<Type>(value)); }
+    void fill(typename CVector::size_type n, Type&& value, typename CVector::iterator first = StdVec::begin())  { std::fill_n(first,n,std::forward<Type>(value)); }
 
     typename CVector::iterator find(Type&& value)
     {
@@ -106,23 +107,20 @@ public:
     {
         return  std::find(StdVec::begin(), StdVec::end(),std::forward<Type>(value));
     }
-    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&&, Type&&) 的二元谓词函数
+    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
     typename CVector::iterator find(Type&& value,CompareFunction compareFunction)
     {
         return  std::find_if(StdVec::begin(), StdVec::end(),
                              std::bind(compareFunction,std::placeholders::_1,std::forward<Type>(value)));
     }
-    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&&, Type&&) 的二元谓词函数
+    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
     typename CVector::const_iterator find(Type&& value,CompareFunction compareFunction ) const
     {
         return  std::find_if(StdVec::begin(), StdVec::end(),
                              std::bind(compareFunction,std::placeholders::_1,std::forward<Type>(value)));
     }
 
-    void fill(typename CVector::iterator first, typename CVector::iterator last, Type&& value) { std::fill(first,last,std::forward<Type>(value)); }
-    void fill(typename CVector::iterator first, typename CVector::size_type n, Type&& value)  { std::fill_n(first,n,std::forward<Type>(value)); }
-
-    Type first() const{ if (StdVec::empty()) return Type(); return *StdVec::begin(); }
+    const Type& first() const{ return StdVec::operator[](0); }
 
     template <class Function>
     Function for_each(Function func){ return std::for_each(StdVec::begin(), StdVec::end(),func); }
@@ -133,7 +131,7 @@ public:
         }
         return -1;
     }
-    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&&, Type&&) 的二元谓词函数
+    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
     int index(Type&& value,CompareFunction compareFunction) const {
         for (int idx = 0; idx <(int)StdVec::size();++idx){
             if (compareFunction(StdVec::operator[](idx),std::forward<Type>(value))) return idx;
@@ -143,7 +141,7 @@ public:
 
     void insert(unsigned int index, Type&& value){ StdVec::emplace(StdVec::begin() + index, std::forward<Type>(value)); }
 
-    Type last() const{ if (StdVec::empty()) return Type(); return StdVec::operator[](StdVec::size() - 1); }
+    const Type& last() const{ return StdVec::operator[](StdVec::size() - 1); }
 
     void pop_front(){ if (!StdVec::empty()) StdVec::erase(StdVec::begin()); }
 
@@ -160,16 +158,17 @@ public:
     {
         StdVec::erase(std::remove(std::begin(*this), std::end(*this),std::forward<Type>(value)), std::end(*this));
     }
-    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&&, Type&&) 的二元谓词函数
+    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
     void remove(Type&& value, CompareFunction compareFunction)
     {
         StdVec::erase(std::remove_if(std::begin(*this), std::end(*this),
                                      std::bind(compareFunction,std::placeholders::_1,std::forward<Type>(value))),
-                      std::end(*this));}
+                      std::end(*this));
+    }
     void removeAll(){ StdVec::clear(); StdVec::shrink_to_fit();}
     void removeAt(unsigned int index){ StdVec::erase(StdVec::begin() + index); }
-    void removeFirst(){ if (!StdVec::empty()) {StdVec::erase(StdVec::begin());} }
-    void removeLast(){ if (!StdVec::empty()) {StdVec::pop_back();} }
+    void removeFirst(){ this->pop_front(); }
+    void removeLast(){ StdVec::pop_back(); }
     void removeRange(unsigned int from, unsigned int to)
     {
         while(to-from)
@@ -179,23 +178,24 @@ public:
         }
     }
 
-    void replace(unsigned int pos, Type&& value){ StdVec::operator[](pos) = std::forward<Type>(value); }
+    void replace(unsigned int index, Type&& value){ StdVec::operator[](index) = std::forward<Type>(value); }
 
     void sort(){return std::sort(StdVec::begin(),StdVec::end());}
-    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&&, Type&&) 的二元谓词函数
+    template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
     void sort(CompareFunction compareFunction){return std::sort(StdVec::begin(),StdVec::end(),compareFunction);}
 
     void swap (std::vector<Type,Alloc>& other){ return StdVec::swap(other);}
-    void swap (unsigned int pos1,unsigned int pos2){ return std::swap(StdVec::operator[](pos1),StdVec::operator[](pos2));}
+    void swap (unsigned int index1,unsigned int index2){ return std::swap(StdVec::operator[](index1),StdVec::operator[](index2));}
 
-    Type takeAt(unsigned int pos) const{ return StdVec::operator[](pos); }
-    Type takeFirst() const { if (StdVec::empty()) return Type(); return *StdVec::begin(); }
-    Type takeLast() const { if (StdVec::empty()) return Type(); return StdVec::operator[](StdVec::size() - 1); }
+    const Type& takeAt(unsigned int index) const{ return StdVec::operator[](index); }
+    const Type& takeFirst() const { return StdVec::operator[](0); }
+    const Type& takeLast() const { return StdVec::operator[](StdVec::size() - 1); }
 
+    std::vector<Type> toStdVec() const { return *this; }
     std::list<Type> toStdList() const{ return std::list<Type>(StdVec::begin(),StdVec::end());}
     std::set<Type> toStdSet() const{ return std::set<Type>(StdVec::begin(),StdVec::end());}
 
-    Type value(unsigned int pos) const { return StdVec::operator[](pos); }
+    const Type& value(unsigned int index) const { return StdVec::operator[](index); }
 };
 
 }

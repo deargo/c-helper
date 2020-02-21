@@ -4,6 +4,7 @@
 #include "command.hpp"
 #include "threadpool.hpp"
 #include "vector.hpp"
+#include "list.hpp"
 
 using namespace std;
 
@@ -159,7 +160,6 @@ void CVectorTest()
     StdList stdList{21,22,23,24,25,26,27,28,29};
     StdVec stdVec1{31,32,33,34,35,36,37,38,39};
     StdVec stdVec2{41,42,43,44,45,46,47,48,49};
-
     NewVec newVec1;
     NewVec newVec2(10);
     NewVec newVec3(stdSet);
@@ -170,7 +170,6 @@ void CVectorTest()
     TEST_vec_print(" stdSet: ",stdSet);
     TEST_vec_print("stdList: ",stdList);
     TEST_vec_print("stdVec1: ",stdVec1);
-    TEST_vec_print("stdVec2: ",stdVec2);
     TEST_vec_print("newVec1: ",newVec1);
     TEST_vec_print("newVec2: ",newVec2);
     TEST_vec_print("newVec3: ",newVec3);
@@ -216,11 +215,11 @@ void CVectorTest()
     TEST_vec_exec ("newVec1.count(11) : ",newVec1.count(11));
     TEST_vec_exec ("newVec1.count(>28): ",newVec1.count(28,[](int v1, int v2){ return v1>v2;}));
 
-    TEST_vec_print("newVec2                                         : ",newVec2);
-    newVec2.fill(newVec2.begin(),4,111);
-    TEST_vec_print("newVec2.fill(newVec2.begin(),4,111)             : ",newVec2);
-    newVec2.fill(newVec2.begin()+6,newVec2.end(),222);
-    TEST_vec_print("newVec2fill(newVec2.begin()+6,newVec2.end(),222): ",newVec2);
+    TEST_vec_print("newVec2       : ",newVec2);
+    newVec2.fill(4,111,newVec2.begin());
+    TEST_vec_print("newVec2.fill-1: ",newVec2);
+    newVec2.fill(222,newVec2.begin()+6,newVec2.end());
+    TEST_vec_print("newVec2.fill-2: ",newVec2);
 
     TEST_vec_print("newVec3                     : ",newVec3);
     TEST_vec_print("stdSet                      : ",stdSet);
@@ -260,13 +259,15 @@ void CVectorTest()
     TEST_vec_print("newVec1  : ",newVec1);
 
     newVec1.remove(11);
+    TEST_vec_print("newVec1 remove-1 : ",newVec1);
     newVec1.remove(15,[](int vecVal,int findVal){ return vecVal < findVal+2 && vecVal >= findVal-2;});
+    TEST_vec_print("newVec1 remove-2 : ",newVec1);
     newVec1.removeRange(3,6);
-    TEST_vec_print("newVec1 remove1 : ",newVec1);
+    TEST_vec_print("newVec1 remove-3 : ",newVec1);
     newVec1.removeFirst();
     newVec1.removeLast();
     newVec1.removeAt(3);
-    TEST_vec_print("newVec1 remove2    : ",newVec1);
+    TEST_vec_print("newVec1 remove2-4 : ",newVec1);
     TEST_vec_exec("newVec1.size()     : ",newVec1.size());
     TEST_vec_exec("newVec1.capacity() : ",newVec1.capacity());
     newVec1.removeAll();
@@ -303,6 +304,189 @@ void CVectorTest()
     stdList = newVec5.toStdList();
     TEST_vec_print("stdSet        : ",stdSet);
     TEST_vec_print("stdList       : ",stdList);
+
+    TEST_FUNC_ENDED;
+}
+
+
+void CListTest()
+{
+    TEST_FUNC_BEGIN;
+
+    typedef std::set<int> StdSet;
+    typedef std::list<int> StdList;
+    typedef std::vector<int> StdVec;
+    typedef CppHelper::CList<int> NewList;
+
+
+#define TEST_list_bool(b) (b ? "true" : "false")
+#define TEST_list_exec(flage,code) cout << flage << code << endl
+#define TEST_list_print(flage,val) cout << flage ;\
+    for(auto it = val.begin();it!=val.end();++it) cout << *it << " ";\
+    if(val.empty()) cout << "empty";\
+    cout << endl
+
+    int arr[] = {1,2,3,4,5,6,7,8,9};
+    StdSet stdSet{11,12,13,14,15,16,17,18,19};
+    StdList stdList{21,22,23,24,25,26,27,28,29};
+    StdVec stdVec1{31,32,33,34,35,36,37,38,39};
+
+    NewList newList1;
+    NewList newList2(10);
+    NewList newList3(stdSet);
+    NewList newList4(stdList);
+    NewList newList5(stdVec1);
+    NewList newList6(arr,arr+9);
+
+    TEST_list_print(" stdSet: ",stdSet);
+    TEST_list_print("stdList: ",stdList);
+    TEST_list_print("stdVec1: ",stdVec1);
+    TEST_list_print("newList1: ",newList1);
+    TEST_list_print("newList2: ",newList2);
+    TEST_list_print("newList3: ",newList3);
+    TEST_list_print("newList4: ",newList4);
+    TEST_list_print("newList5: ",newList5);
+    TEST_list_print("newList6: ",newList6);
+
+    TEST_list_exec ("newList3 == newList4 ? : ",TEST_list_bool(newList3 == newList4));
+    TEST_list_exec ("newList3 != newList4 ? : ",TEST_list_bool(newList3 != newList4));
+
+    newList1 = newList3;
+    newList1 += newList4;
+    newList1 << 100 << 200<< 300;
+    TEST_list_print("newList1: ",newList1);
+
+    TEST_list_exec ("newList1.size()    : ",newList1.size());
+    newList1.clear();
+    TEST_list_exec ("newList1.size()    : ",newList1.size());
+    TEST_list_print("newList1: ",newList1);
+
+    newList1.append(555);
+    newList1.append(newList3);
+    newList1.append(stdSet);
+    newList1.append(stdList);
+    TEST_list_print("newList1: ",newList1);
+
+    TEST_list_exec ("newList1.at(11) : ",newList1.at(11));
+
+    newList1.contains(200,[](const int& v1,int v2){ return v1>v2;});
+    TEST_list_exec ("newList1.contains(555) : ",TEST_list_bool(newList1.contains(555)));
+    TEST_list_exec ("newList1.contains(>200): ",TEST_list_bool(newList1.contains(200,[](const int& v1,int v2){ return v1>v2;})));
+    TEST_list_exec ("newList1.count(11) : ",newList1.count(11));
+    TEST_list_exec ("newList1.count(>28): ",newList1.count(28,[](int v1, int v2){ return v1>v2;}));
+
+    newList1.clear();
+    newList1.resize(20);
+    TEST_list_print("newList3      : ",newList3);
+    TEST_list_print("newList1      : ",newList1);
+    newList1.copy(newList3);
+    TEST_list_print("newList1.copy1: ",newList1);
+    newList1.copy(3,111);
+    TEST_list_print("newList1.copy2: ",newList1);
+    newList1.copy(newList3.begin(),newList3.end());
+    TEST_list_print("newList1.copy3: ",newList1);
+    newList1.copy(newList3.begin(),newList3.end(),[](int v){ return v>15; });
+    TEST_list_print("newList1.copy4: ",newList1);
+    newList1.copy(newList3.begin(),7);
+    TEST_list_print("newList1.copy5: ",newList1);
+
+    TEST_list_exec("newList1.count(15) : ",newList1.count(15));
+    TEST_list_exec("newList1.count(>15): ",newList1.count(15,[](int v1,int v2){ return v1>v2; }));
+
+    TEST_vec_print("newList1                  : ",newList1);
+    TEST_vec_print("newList3                  : ",newList3);
+    TEST_vec_exec ("newList1.equal1(newList3) : ",TEST_vec_bool(newList1.equal(newList3)));
+    TEST_vec_exec ("newList1.equal2(newList3) : ",TEST_vec_bool(newList1.equal(newList3.begin())));
+    TEST_vec_exec ("newList1.equal3(newList3) : ",TEST_vec_bool(newList1.equal(newList3.begin(),[](int v1,int v2){ return v1==v2; })));
+
+    newList1.clear();
+    newList1.resize(5);
+    TEST_list_print("newList1        : ",newList1);
+    newList1.fill(111,newList1.begin(),newList1.end());
+    TEST_list_print("newList1.fill-1 : ",newList1);
+    newList1.resize(10);
+    newList1.fill(5,222,newList1.begin());
+    TEST_list_print("newList1.fill-2 : ",newList1);
+
+    newList1.copy(newList3);
+    TEST_list_print("newList1           : ",newList1);
+    TEST_list_exec ("newList2.find(13)  : ",*(newList1.find(13)));
+    TEST_list_exec ("newList2.find(<=13): ",*(newList1.find(13,[](int vecVal,int findVal){ return vecVal<=findVal;})));
+
+    cout << "newList1.for_each: ";
+    newList1.for_each([](int v){ cout << v << " "; });
+    cout << endl;
+
+    TEST_list_exec("newList1.index(15)            : ",newList1.index(15));
+    TEST_list_exec("newList1.index(<100 && >=15)  : ",newList1.index(15,[](int vecVal,int findVal){ return vecVal<100&& vecVal>=findVal;}));
+
+    TEST_list_print("newList1              : ",newList1);
+    newList1.insert(3,333);
+    TEST_list_print("newList1.insert(3,333): ",newList1);
+
+    TEST_list_print("newList1        : ",newList1);
+    newList1.insert(newList1.size(),666);
+    TEST_list_exec("newList1.last() : ",newList1.last());
+
+    newList1.prepend(333);
+    TEST_list_exec("newList1.first(): ",newList1.first());
+    TEST_list_print("newList1        : ",newList1);
+
+    newList1.clear();
+    TEST_list_print("newList1  : ",newList1);
+    TEST_list_print("newList3  : ",newList3);
+    TEST_list_print(" stdSet: ",stdSet);
+    TEST_list_print("stdList: ",stdList);
+    newList1.push_back(11);
+    newList1.push_back(newList3);
+    newList1.push_back(stdSet);
+    newList1.push_back(stdList);
+    newList1.push_front(444);
+    TEST_list_print("newList1  : ",newList1);
+
+    newList1.remove(11);
+    TEST_list_print("newList1 remove-1 : ",newList1);
+    newList1.remove(15,[](int vecVal,int findVal){ return vecVal < findVal+2 && vecVal >= findVal-2;});
+    TEST_list_print("newList1 remove-2 : ",newList1);
+    newList1.removeRange(3,6);
+    TEST_list_print("newList1 remove-3 : ",newList1);
+    newList1.removeFirst();
+    newList1.removeLast();
+    newList1.removeAt(3);
+    TEST_list_print("newList1 remove-4 : ",newList1);
+    TEST_list_exec("newList1.size()     : ",newList1.size());
+    newList1.removeAll();
+    TEST_list_print("newList1 removeAll  : ",newList1);
+    TEST_list_exec("newList1.size()     : ",newList1.size());
+
+    newList1 = newList3;
+    TEST_list_print("newList1=newList3      : ",newList1);
+    newList1.replace(3,333);
+    TEST_list_print("newList1.replace(3,333): ",newList1);
+
+    TEST_list_print("newList3               : ",newList3);
+    newList1.swap(newList3);
+    TEST_list_print("newList1.swap(newList3) : ",newList1);
+    TEST_list_print("newList3               : ",newList3);
+    newList1.swap(3,7);
+    TEST_list_print("newList1.swap(3,7) : ",newList1);
+
+    TEST_list_exec("newList1.takeAt(3)   : ",newList1.takeAt(3));
+    TEST_list_exec("newList1.takeFirst() : ",newList1.takeFirst());
+    TEST_list_exec("newList1.takeLast()  : ",newList1.takeLast());
+    TEST_list_exec("newList1.value(7)    : ",newList1.value(7));
+
+
+    TEST_list_print("newList5       : ",newList5);
+    TEST_list_print("stdSet        : ",stdSet);
+    TEST_list_print("stdList       : ",stdList);
+    TEST_list_print("stdVec1       : ",stdVec1);
+    stdSet = newList5.toStdSet();
+    stdVec1 = newList5.toStdVec();
+    stdList = newList5.toStdList();
+    TEST_list_print("stdSet        : ",stdSet);
+    TEST_list_print("stdList       : ",stdList);
+    TEST_list_print("stdVec1       : ",stdVec1);
 
     TEST_FUNC_ENDED;
 }

@@ -26,5 +26,6 @@ void CLibraryTest();
 void CCommandTest();
 void CThreadPoolTest();
 void CVectorTest();
+void CListTest();
 }
 

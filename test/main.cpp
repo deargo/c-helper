@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
     //CppHelperTest::CLibraryTest();
     //CppHelperTest::CCommandTest();
     //CppHelperTest::CThreadPoolTest();
-    CppHelperTest::CVectorTest();
+    //CppHelperTest::CVectorTest();
+    CppHelperTest::CListTest();
 
     cout << "exit main." << endl;
 #ifdef __USE_QT__
