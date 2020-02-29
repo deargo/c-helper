@@ -108,14 +108,14 @@ private:
         }
 
         //队列容量
-        int capacity()
+        typename Tasks::size_type capacity()
         {
             Guard guard(m_mutex);
             return m_maxSize;
         }
 
         //队列大小
-        int size()
+        typename Tasks::size_type size()
         {
             Guard guard(m_mutex);
             return m_tasks.size();
@@ -274,8 +274,8 @@ public:
     //队列接口
     bool queueEmpty()  { return m_queue.empty();}
     bool queueFull()  { return m_queue.full();}
-    int queueCapacity()  { return m_queue.capacity();}
-    int queueSize()  { return m_queue.size();}
+    typename Tasks::size_type queueCapacity()  { return m_queue.capacity();}
+    typename Tasks::size_type queueSize()  { return m_queue.size();}
     void queueResize(int maxSize)  { return m_queue.resize(maxSize);}
     void queueClear()  { return m_queue.clear();}
 

@@ -14,6 +14,7 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include <assert.h>
 
 #include "test.h"
 
@@ -32,7 +33,8 @@ int main(int argc, char *argv[])
     //CppHelperTest::CCommandTest();
     //CppHelperTest::CThreadPoolTest();
     //CppHelperTest::CVectorTest();
-    CppHelperTest::CListTest();
+    //CppHelperTest::CListTest();
+    CppHelperTest::CLinkListTest();
 
     cout << "exit main." << endl;
 #ifdef __USE_QT__

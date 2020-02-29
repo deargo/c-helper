@@ -9,6 +9,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <assert.h>
 
 namespace CppHelper
 {
@@ -18,7 +19,7 @@ class CList : public std::list<Type,Alloc>{
 
 public:
     explicit CList(const Alloc& alloc = Alloc()):StdList(alloc) {}                                          //默认构造函数
-    explicit CList(size_t n, const Type& val = Type(), const Alloc& alloc = Alloc()):StdList(n,val,alloc){} //容量构造函数
+    explicit CList(typename CList::size_type n, const Type& val = Type(), const Alloc& alloc = Alloc()):StdList(n,val,alloc){} //容量构造函数
     CList(CList&& other):StdList(std::forward<CList>(other)){ }                                             //拷贝构造函数
     CList(const std::list<Type,Alloc>& vec){ StdList::assign(vec.begin(), vec.end()); }                     //可用std::list初始化
     template <class InitIterator>                                                                           //可用迭代器初始化
@@ -30,8 +31,8 @@ public:
     operator std::list<Type,Alloc>(){ return *this; }                                                  //类型转换函数，可直接转换为std::list
     bool operator == (const CList& other) const{ return StdList::size()==other.size() && std::equal(StdList::begin(),StdList::end(),other.begin()); }
     bool operator !=(const CList& other) const { return StdList::size()!=other.size() || false == std::equal(StdList::begin(),StdList::end(),other.begin()); }
-    Type& operator [](typename CList::size_type index){ typename CList::iterator it = CList::begin(); while(index--) ++it; return *it; }
-    const Type& operator [](typename CList::size_type index) const { typename CList::const_iterator it = CList::begin(); while(index--) ++it; return *it; }
+    Type& operator [](typename CList::size_type index){ assert(index<StdList::size()); typename CList::iterator it = CList::begin(); while(index--) ++it; return *it; }
+    const Type& operator [](typename CList::size_type index) const { assert(index<StdList::size());typename CList::const_iterator it = CList::begin(); while(index--) ++it; return *it; }
     CList& operator =(const CList& other){StdList::assign(other.begin(), other.end()); return *this;}  //赋值构造函数
     CList& operator +(const CList& other){ push_back(other); return *this; }
     CList& operator +=(Type&& value){ push_back(std::forward<Type>(value)); return *this; }
@@ -88,12 +89,12 @@ public:
         }
     }
 
-    int count(Type&& value) const
+    typename CList::size_type count(Type&& value) const
     {
         return std::count(StdList::begin(), StdList::end(),std::forward<Type>(value));
     }
     template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
-    int count(Type&& value,CompareFunction compareFunction) const
+    typename CList::size_type count(Type&& value,CompareFunction compareFunction) const
     {
         return  std::count_if(StdList::begin(), StdList::end(),
                               std::bind(compareFunction,std::placeholders::_1,std::forward<Type>(value)));
@@ -154,7 +155,7 @@ public:
         return -1;
     }
 
-    void insert(unsigned int index, Type&& value)
+    void insert(typename CList::size_type index, Type&& value)
     {
         typename StdList::iterator it=StdList::begin();
         while (index --)  ++it;
@@ -199,7 +200,7 @@ public:
     void swap (std::list<Type,Alloc>& other){ return StdList::swap(other);}
     void swap (unsigned int index1,unsigned int index2){ return std::swap(this->operator[](index1),this->operator[](index2));}
 
-    const Type& takeAt(unsigned int index) const{ return at(index); }
+    const Type& takeAt(unsigned int index) const{ return this->operator[](index); }
     const Type& takeFirst() const { return *StdList::begin(); }
     const Type& takeLast() const { return this->operator[](StdList::size() - 1); }
 

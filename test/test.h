@@ -27,5 +27,6 @@ void CCommandTest();
 void CThreadPoolTest();
 void CVectorTest();
 void CListTest();
+void CLinkListTest();
 }
 

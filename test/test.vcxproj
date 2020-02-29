@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\cpphelper\linklist.hpp" />
     <ClInclude Include="cpphelper\command.hpp" />
     <ClInclude Include="cpphelper\library.hpp" />
     <ClInclude Include="cpphelper\list.hpp" />

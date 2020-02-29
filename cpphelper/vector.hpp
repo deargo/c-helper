@@ -18,7 +18,7 @@ class CVector : public std::vector<Type,Alloc>{
 
 public:
     explicit CVector(const Alloc& alloc = Alloc()):StdVec(alloc) {}                                          //默认构造函数
-    explicit CVector(size_t n, const Type& val = Type(), const Alloc& alloc = Alloc()):StdVec(n,val,alloc){} //容量构造函数
+    explicit CVector(typename CVector::size_type n, const Type& val = Type(), const Alloc& alloc = Alloc()):StdVec(n,val,alloc){} //容量构造函数
     CVector(CVector&& other):StdVec(std::forward<CVector>(other)){ }                                                           //拷贝构造函数
     CVector(const std::vector<Type,Alloc>& vec){ StdVec::assign(vec.begin(), vec.end()); }                   //可用std::vector初始化
     template <class InitIterator>                                                                            //可用迭代器初始化
@@ -73,12 +73,12 @@ public:
         return std::copy_n(first,n,thisDesc);
     }
 
-    int count(Type&& value) const
+    typename CVector::size_type count(Type&& value) const
     {
         return std::count(StdVec::begin(), StdVec::end(),std::forward<Type>(value));
     }
     template <class CompareFunction>  //需要传入类似 bool (*compareFunction)(Type&& v1, Type&& v2) 的二元谓词函数，v1为element-value，v2为input-value
-    int count(Type&& value,CompareFunction compareFunction) const
+    typename CVector::size_type count(Type&& value,CompareFunction compareFunction) const
     {
         return  std::count_if(StdVec::begin(), StdVec::end(),
                               std::bind(compareFunction,std::placeholders::_1,std::forward<Type>(value)));
@@ -139,7 +139,7 @@ public:
         return -1;
     }
 
-    void insert(unsigned int index, Type&& value){ StdVec::emplace(StdVec::begin() + index, std::forward<Type>(value)); }
+    void insert(typename CVector::size_type index, Type&& value){ StdVec::emplace(StdVec::begin() + index, std::forward<Type>(value)); }
 
     const Type& last() const{ return StdVec::operator[](StdVec::size() - 1); }
 
